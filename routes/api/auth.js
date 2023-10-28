@@ -1,16 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../../middleware/auth");
-const User = require("../../models/User");
+const { authUser } = require("../../controller/authController");
 
-router.get("/", auth, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).select("-password");
-    res.status(200).json(user);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
+router.get("/", auth, authUser);
 
 module.exports = router;
