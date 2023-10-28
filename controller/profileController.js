@@ -15,6 +15,7 @@ const authProfile = async (req, res) => {
         .status(400)
         .json({ message: "There is no profile for this user" });
     }
+    res.status(400).json(profile);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
