@@ -26,7 +26,9 @@ const createContact = async (req, res) => {
     let contact = await Contact.findOne({ email });
     if (contact)
       return res.status(400).json({ message: "Contact is already exists" });
+
     contact = await Contact.create({
+      user: req.user.id,
       name,
       email,
       number,
@@ -64,6 +66,8 @@ const updateContact = async (req, res) => {
       return res
         .status(404)
         .json({ message: "There is no contact available to update" });
+    if (req.user.id !== contact.user.toString())
+      return res.status(401).json({ message: "Unauthorized user to update" });
     contact = await Contact.findByIdAndUpdate(
       req.params.id,
       { name, email, number },
@@ -87,6 +91,8 @@ const deleteContact = async (req, res) => {
       return res
         .status(404)
         .json({ message: "There is no contact available to delete" });
+    if (req.user.id !== contact.user.toString())
+      return res.status(401).json({ message: "Unauthorized user to update" });
     contact = await Contact.findByIdAndRemove(req.params.id);
     res.status(200).json({ message: "Contact is successfully deleted" });
   } catch (error) {
